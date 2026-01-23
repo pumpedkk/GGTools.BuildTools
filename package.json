@@ -1,0 +1,19 @@
+{
+  "name": "com.ggtools.buildtools",
+  "version": "1.0.0",
+  "displayName": "BuildTools",
+  "description": "This package provides simple tools for managing build versioning in Unity, automatically showing the current version in the application UI and applying it to the build output name.",
+  "unity": "6000.0",
+ "keywords": [
+    "BuldTools",
+    "Build Tools",
+    "GGTools",
+    "GGTools.BuildTools",
+    "GGTools.BuildTools.BuildTools"
+  ],
+  "author": {
+    "name": "Lucas Valverde",
+    "email": "lucashvfgomes@gmail.com",
+    "url": "https://lucashvfgomes.wixsite.com/my-site"
+  }
+}

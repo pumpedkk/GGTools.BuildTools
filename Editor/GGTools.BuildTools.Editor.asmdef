@@ -1,0 +1,18 @@
+{
+    "name": "GGTools.BuildTools.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GGTools.BuildTools"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
