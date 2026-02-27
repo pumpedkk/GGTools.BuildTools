@@ -12,10 +12,7 @@ public class AutoVersionOnBuild : IPreprocessBuildWithReport, IPostprocessBuildW
 
     public void OnPreprocessBuild(BuildReport report)
     {
-        string projectName = GetBaseProjectName();
         version = DateTime.Now.ToString("yyyyMMdd_HHmm");
-
-        PlayerSettings.productName  = $"{version}_{projectName}";
         PlayerSettings.bundleVersion = version;
     }
 

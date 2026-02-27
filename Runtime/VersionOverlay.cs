@@ -2,37 +2,37 @@ using UnityEngine;
 
 public class VersionOverlay : MonoBehaviour
 {
-    private static VersionOverlay instance;
 
     [SerializeField] bool onlyInDevelopmentBuild = false;
     [SerializeField] Vector2 margin = new Vector2(12, 12);
     [SerializeField] VersionOverlayPosition position = VersionOverlayPosition.TopLeft;
     [SerializeField] int fontSize = 16;
     [SerializeField] Color color = Color.white;
+    [SerializeField] private bool dontDestroyOnLoad;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+ /*   [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void EnsureExists()
     {
-        if (instance != null) return;
-
-        instance = Object.FindAnyObjectByType<VersionOverlay>();
-        if (instance != null) return;
-
+        if(FindAnyObjectByType<VersionOverlay>() != null)
+        {
+            return;
+        }
         GameObject go = new GameObject("VersionOverlay (Auto)");
-        instance = go.AddComponent<VersionOverlay>();
+        go.AddComponent<VersionOverlay>();
         DontDestroyOnLoad(go);
-    }
+    }*/
 
     void Awake()
     {
-        if (instance != null && instance != this)
+        GameObject obj = FindAnyObjectByType<VersionOverlay>().gameObject;
+        if(obj != null)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(obj);
         }
-
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        if (dontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     void OnGUI()
