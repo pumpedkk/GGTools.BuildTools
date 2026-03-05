@@ -7,26 +7,45 @@ using System.IO;
 public class AutoVersionOnBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
     public int callbackOrder => 0;
-    
+    const string PrefKey = "GGTOOLS_BUILD_ENABLE_FEATURE_X";
+    bool changeProductName = false;
+
 
     string version;
 
     public void OnPreprocessBuild(BuildReport report)
     {
+        bool current = EditorPrefs.GetBool(PrefKey, false);
+
+        changeProductName = !EditorUtility.DisplayDialog(
+            "GGTools - Change Product Name",
+            $"Plataform: {report.summary.platform}\n" +
+            $"Do you want to keep the Product Name before starting the build?",
+            "Yes",
+            "No"
+        );
+
+
         version = DateTime.Now.ToString("yyyyMMdd_HHmm");
         PlayerSettings.bundleVersion = version;
+        if (changeProductName) 
+        {
+            PlayerSettings.productName = $"{version}_{PlayerSettings.productName}";
+        }
         PlayerSettings.companyName = "Gaz Games";
     }
 
     public void OnPostprocessBuild(BuildReport report)
     {
+        
+
         var buildPath = report.summary.outputPath;
 
         var buildFolder = Path.GetDirectoryName(buildPath);
 
         var parent = Directory.GetParent(buildFolder).FullName;
 
-        string projectName = PlayerSettings.productName;
+        string projectName = GetBaseProjectName();
 
         string newFolder =
             Path.Combine(parent, $"{version}_{projectName}");
@@ -36,12 +55,11 @@ public class AutoVersionOnBuild : IPreprocessBuildWithReport, IPostprocessBuildW
             Directory.Move(buildFolder, newFolder);
         }
 
+        PlayerSettings.productName = GetBaseProjectName();
+
     }
 
 
-    //Method to retrieve the project name without the date. Since the project renaming functionality was removed, I kept the function saved.
-
-#if false
     static string GetBaseProjectName()
     {
         string currentName = PlayerSettings.productName;
@@ -55,5 +73,4 @@ public class AutoVersionOnBuild : IPreprocessBuildWithReport, IPostprocessBuildW
 
         return currentName;
     }
-#endif
 }
