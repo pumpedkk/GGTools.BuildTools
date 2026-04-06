@@ -21,6 +21,8 @@ namespace GGTools.BuildTools
     /// </summary>
     public class AutoVersionOnBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
+        const string COMPANY_NAME = "Gaz Games";
+
         public int callbackOrder => 0;
         const string PrefKey = "GGTOOLS_BUILD_ENABLE_FEATURE_X";
         bool changeProductName = false;
@@ -67,7 +69,7 @@ namespace GGTools.BuildTools
             {
                 PlayerSettings.productName = $"{version}_{PlayerSettings.productName}";
             }
-            PlayerSettings.companyName = "Gaz Games";
+            PlayerSettings.companyName = COMPANY_NAME;
         }
 
         /// <summary>
@@ -119,6 +121,33 @@ namespace GGTools.BuildTools
             }
 
             return currentName;
+        }
+
+        /// <summary>
+        /// Called automatically by Unity when the package is imported.
+        /// 
+        /// Auto setup some informations that are shared across all projects.
+        /// </summary>
+        [InitializeOnLoadMethod]
+        public static void InitialProjectSetup()
+        {
+            const string flagPath = "UserSettings/BuildTools.InitialSetup";
+            if (File.Exists(flagPath)) return;
+            File.WriteAllText(flagPath, "1");
+
+            PlayerSettings.companyName = COMPANY_NAME;
+            PlayerSettings.Android.textureCompressionFormats = new TextureCompressionFormat[]{ TextureCompressionFormat.ASTC};
+
+            string applicationIdentifier = $"com.{PlayerSettings.companyName.Replace(" ", String.Empty)}.{PlayerSettings.productName.Replace(" ", String.Empty)}";
+            #if UNITY_6000_0_OR_NEWER
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, applicationIdentifier);
+            #else
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, applicationIdentifier);
+            #endif
+
+
+
+            AssetDatabase.SaveAssets();
         }
     }
 }
